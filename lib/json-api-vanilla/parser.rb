@@ -98,7 +98,11 @@ module JSON::Api::Vanilla
             end
           end
 
-          ref = ref || Object.new
+          # If something is missing, we can't retrieve that data. Although this could be a case
+          # where we actually want an empty array (in the caser of a has_many relationship), JSONAPI doesn't
+          # give us enough data to figure that out. Instead, if ref is empty, we just return nil.
+          ref = ref.presence
+
           set_key(obj, key, ref, original_keys)
 
           rel_links[ref] = value['links']
